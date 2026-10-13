@@ -21,3 +21,4 @@ The schedule, marks breakdown and textbook links are in **[COURSE.md](COURSE.md)
 | – | Course outline | [`Course_Outline_MIS.docx`](Course_Outline_MIS.docx) |
 | – | Textbook & reference book links | [`slides/Textbook-Links.pptx`](slides/Textbook-Links.pptx) |
 | 1 | Ch 1: Information Systems in Global Business Today | [`slides/Ch01-Information-Systems-in-Global-Business-Today.pptx`](slides/Ch01-Information-Systems-in-Global-Business-Today.pptx) |
+| 1 | Case 1: UPS Competes Globally with IT (Ch 1) | [`case-studies/case-01-ups/`](case-studies/case-01-ups/) |
