@@ -21,4 +21,4 @@ Chapter 1, *Spotlight on Technology Case Study* (Laudon 18th ed., pp. 18–19). 
 
 ## My answers
 
-_To do_
+[`21-44625-1_Case_Study_1.docx`](21-44625-1_Case_Study_1.docx): due 13 Oct 2026, 11:00 PM, on the AIUB portal (Course & Results → MIS → Midterm → Case Study 1 (UPS Mail)).
