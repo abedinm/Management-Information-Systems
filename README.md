@@ -22,3 +22,5 @@ The schedule, marks breakdown and textbook links are in **[COURSE.md](COURSE.md)
 | – | Textbook & reference book links | [`slides/Textbook-Links.pptx`](slides/Textbook-Links.pptx) |
 | 1 | Ch 1: Information Systems in Global Business Today | [`slides/Ch01-Information-Systems-in-Global-Business-Today.pptx`](slides/Ch01-Information-Systems-in-Global-Business-Today.pptx) |
 | 1 | Case 1: UPS Competes Globally with IT (Ch 1) | [`case-studies/case-01-ups/`](case-studies/case-01-ups/) |
+| 2 | Ch 2: Global E-business and Collaboration | [`slides/Ch02-Global-E-business-and-Collaboration.pptx`](slides/Ch02-Global-E-business-and-Collaboration.pptx) |
+| 2 | Case 2: How Much Do Virtual Meetings Help Collaboration? (Ch 2) | [`case-studies/case-02-virtual-meetings/`](case-studies/case-02-virtual-meetings/) |
