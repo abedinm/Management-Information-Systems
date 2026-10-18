@@ -11,4 +11,4 @@ Chapter 2 case study (Laudon 18th ed., pp. 64–65). Source: [`MIS18_Case_2.pdf`
 
 ## My answers
 
-[`21-44625-1_Case_Study_2.docx`](21-44625-1_Case_Study_2.docx)
+[`21-44625-1_Case_Study_2.docx`](21-44625-1_Case_Study_2.docx), submitted on the AIUB portal 18 Oct 2026, 10:11 PM.
