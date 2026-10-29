@@ -14,6 +14,8 @@ Company: **SA Paribahan** (courier and parcel, Bangladesh). Brief: [`MIS-Assignm
 ## Files
 
 - [`MIS_Assignment_1_SA_Paribahan.docx`](MIS_Assignment_1_SA_Paribahan.docx): draft with cover sheet, Q1 to Q3 and references
-- [`five_forces_SA_Paribahan.png`](five_forces_SA_Paribahan.png): the five forces diagram (Figure 1)
+- [`five_forces_SA_Paribahan.png`](five_forces_SA_Paribahan.png): the five forces diagram (Figure 1) in the plain version
+- [`MIS_Assignment_1_SA_Paribahan_designed.docx`](MIS_Assignment_1_SA_Paribahan_designed.docx): designed version with the same text: cover, contents, header and footer, infographics, summary tables
+- [`graphics/`](graphics/): infographics for the designed version (five forces, strategies, cover map)
 
 To do before submitting: fill in the other group members, the course code and the course teacher on the cover sheet.
