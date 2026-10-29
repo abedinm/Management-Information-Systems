@@ -24,3 +24,6 @@ The schedule, marks breakdown and textbook links are in **[COURSE.md](COURSE.md)
 | 1 | Case 1: UPS Competes Globally with IT (Ch 1) | [`case-studies/case-01-ups/`](case-studies/case-01-ups/) |
 | 2 | Ch 2: Global E-business and Collaboration | [`slides/Ch02-Global-E-business-and-Collaboration.pptx`](slides/Ch02-Global-E-business-and-Collaboration.pptx) |
 | 2 | Case 2: How Much Do Virtual Meetings Help Collaboration? (Ch 2) | [`case-studies/case-02-virtual-meetings/`](case-studies/case-02-virtual-meetings/) |
+| 3 | Ch 3: Information Systems, Organizations and Strategy | [`slides/Ch03-Information-Systems-Organizations-and-Strategy.pptx`](slides/Ch03-Information-Systems-Organizations-and-Strategy.pptx) |
+| 3 | Group discussion note: airline industry five forces | [`notes/Ch03-Group-Discussion-Airline-Five-Forces.docx`](notes/Ch03-Group-Discussion-Airline-Five-Forces.docx) |
+| 3 | Assignment 1 (group): Porter's five forces of SA Paribahan, due 6 Nov | [`assignments/assignment-01-porters-five-forces/`](assignments/assignment-01-porters-five-forces/) |
