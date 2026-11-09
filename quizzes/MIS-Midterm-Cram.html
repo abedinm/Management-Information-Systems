@@ -1,0 +1,660 @@
+<title>MIS Midterm Cram</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: one reading column of chapter "stations", each a time-boxed block of diagrams + checks; sticky bar holds the 60-min timer and chapter jumps. */
+:root{
+  --bg:#F5F7FA; --surface:#FFFFFF; --sunk:#EBEFF5; --fg:#16202E; --muted:#56637A; --line:#D7DEE8;
+  --ink:#16325C; --accent:#0E8F9C; --accent-soft:#DDF1F3; --amber:#C77A12; --amber-soft:#FBEFD9;
+  --red:#C23B3B; --red-soft:#F8E1E1; --green:#2E7D4F; --green-soft:#DFF1E6; --violet:#5B4BC9; --violet-soft:#E9E6FB;
+  --display:"Space Grotesk",ui-sans-serif,system-ui,sans-serif; --body:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F151E; --surface:#16202C; --sunk:#1D2938; --fg:#E6ECF4; --muted:#9AA8BC; --line:#2B3A4D;
+  --ink:#9CC0F2; --accent:#3FC3CF; --accent-soft:#123A40; --amber:#F0B45A; --amber-soft:#3A2C14;
+  --red:#F07D7D; --red-soft:#3D1D1F; --green:#6FD19A; --green-soft:#16331F; --violet:#A99CF5; --violet-soft:#27224A; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F151E; --surface:#16202C; --sunk:#1D2938; --fg:#E6ECF4; --muted:#9AA8BC; --line:#2B3A4D;
+  --ink:#9CC0F2; --accent:#3FC3CF; --accent-soft:#123A40; --amber:#F0B45A; --amber-soft:#3A2C14;
+  --red:#F07D7D; --red-soft:#3D1D1F; --green:#6FD19A; --green-soft:#16331F; --violet:#A99CF5; --violet-soft:#27224A; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 48px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+.wrap{max-width:980px;margin:0 auto}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;color:var(--ink);margin:0}
+h1{font-size:clamp(28px,5vw,40px);line-height:1.1}
+h2{font-size:24px}
+h3{font-size:16px;letter-spacing:.01em}
+p{margin:0}
+.lab{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.muted{color:var(--muted)}
+b,strong{font-weight:650}
+
+/* header */
+header.top{padding-block:28px 18px;display:grid;gap:16px}
+.examline{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;background:var(--sunk);font-size:13px;font-weight:600;color:var(--fg)}
+.chip.hot{background:var(--red-soft);color:var(--red)}
+.marks{display:grid;gap:6px}
+.bar{display:flex;height:30px;border-radius:8px;overflow:hidden;font-size:12px;font-weight:700}
+.bar span{display:flex;align-items:center;justify-content:center;color:#fff;white-space:nowrap;overflow:hidden}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--muted)}
+
+/* sticky bar */
+.dock{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-bottom:1px solid var(--line);
+  margin-inline:calc(-1*max(16px,env(safe-area-inset-left,0px)));padding:8px max(16px,env(safe-area-inset-left,0px))}
+.dock .in{max-width:980px;margin:0 auto;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.timer{font-family:var(--display);font-size:22px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--ink);min-width:74px}
+button{font:inherit;cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:8px;padding:5px 10px;font-size:13px;font-weight:600}
+button:hover{border-color:var(--accent)}
+button:focus-visible,a:focus-visible,summary:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.jumps{display:flex;gap:6px;overflow-x:auto;flex:1;min-width:0;padding-bottom:2px}
+.jumps a{flex:none;text-decoration:none;font-size:13px;font-weight:600;color:var(--fg);padding:5px 10px;border-radius:999px;background:var(--sunk)}
+.jumps a.done{background:var(--green-soft);color:var(--green)}
+
+/* plan */
+.plan{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-top:18px}
+.plan a{text-decoration:none;color:inherit;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:grid;gap:2px}
+.plan .min{font-family:var(--display);font-size:20px;font-weight:700;color:var(--accent)}
+.plan .t{font-size:13px;font-weight:600}
+.plan .s{font-size:12px;color:var(--muted)}
+.top10{background:var(--ink);color:var(--bg);border-radius:14px;padding:16px 18px;margin-top:18px}
+.top10 h3{color:var(--bg)}
+.top10 ol{margin:8px 0 0;padding-left:20px;display:grid;gap:3px;font-size:14px}
+
+/* sections */
+section.ch{margin-top:34px;scroll-margin-top:70px}
+.chhead{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;border-bottom:3px solid var(--ink);padding-bottom:8px;margin-bottom:14px}
+.chhead .n{font-family:var(--display);font-size:13px;font-weight:700;color:var(--accent);letter-spacing:.06em}
+.chhead label{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer}
+.src{font-size:12px;color:var(--amber);font-weight:600}
+.grid{display:grid;gap:12px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;gap:10px;align-content:start;min-width:0}
+.card > h3{display:flex;gap:8px;align-items:baseline}
+.note{font-size:13px;color:var(--muted)}
+ul.t{margin:0;padding-left:18px;display:grid;gap:3px;font-size:14px}
+.trap{background:var(--amber-soft);border-radius:10px;padding:10px 12px;font-size:14px}
+.trap b{color:var(--amber)}
+.scroll{overflow-x:auto}
+
+/* flow diagrams */
+.flow{display:flex;align-items:stretch;gap:6px;flex-wrap:wrap}
+.flow .b{flex:1 1 90px;min-width:0;background:var(--sunk);border-radius:10px;padding:8px 10px;font-size:13px;display:grid;gap:2px}
+.flow .b b{font-family:var(--display);font-size:14px;color:var(--ink)}
+.flow .ar{align-self:center;color:var(--accent);font-weight:700;font-size:18px}
+.loop{font-size:12px;color:var(--accent);font-weight:600;text-align:center;border:1.5px dashed var(--accent);border-radius:8px;padding:4px}
+
+/* tiles */
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+.tile{border-radius:10px;padding:10px;display:grid;gap:3px;font-size:13px;background:var(--sunk)}
+.tile b{font-family:var(--display);font-size:14px;color:var(--ink)}
+.t-acc{background:var(--accent-soft)} .t-amb{background:var(--amber-soft)} .t-vio{background:var(--violet-soft)} .t-grn{background:var(--green-soft)} .t-red{background:var(--red-soft)}
+
+/* pyramid */
+.pyr{display:grid;gap:4px;justify-items:center}
+.pyr div{text-align:center;color:var(--bg);font-size:13px;padding:8px 6px;font-weight:600;line-height:1.3}
+.pyr .l1{width:46%;background:var(--violet);clip-path:polygon(12% 0,88% 0,100% 100%,0 100%);border-radius:4px 4px 0 0}
+.pyr .l2{width:72%;background:var(--accent);clip-path:polygon(8% 0,92% 0,100% 100%,0 100%)}
+.pyr .l3{width:96%;background:var(--ink);clip-path:polygon(5% 0,95% 0,100% 100%,0 100%)}
+.pyr span{display:block;font-weight:400;font-size:12px;opacity:.9}
+
+/* five forces */
+.ff{display:grid;grid-template-columns:1fr 1.15fr 1fr;grid-template-rows:auto auto auto;gap:8px;align-items:stretch}
+.ff .f{border-radius:10px;padding:8px 10px;font-size:12.5px;background:var(--sunk);display:grid;gap:2px;align-content:start}
+.ff .f b{font-family:var(--display);font-size:13.5px;color:var(--ink)}
+.ff .c{background:var(--ink);color:var(--bg);grid-column:2;grid-row:2;justify-content:center;text-align:center;align-content:center}
+.ff .c b{color:var(--bg)}
+.ff .n1{grid-column:2;grid-row:1}.ff .w{grid-column:1;grid-row:2}.ff .e{grid-column:3;grid-row:2}.ff .s{grid-column:2;grid-row:3}
+@media (max-width:560px){.ff{grid-template-columns:1fr}.ff .f{grid-column:1!important;grid-row:auto!important}}
+
+/* matrix 2x2 */
+.mx{display:grid;grid-template-columns:auto 1fr 1fr;gap:6px;font-size:13px}
+.mx .h{font-weight:700;font-size:12px;color:var(--muted);align-self:end;text-align:center}
+.mx .v{font-weight:700;font-size:12px;color:var(--muted);writing-mode:vertical-rl;transform:rotate(180deg);text-align:center}
+.mx .q{border-radius:10px;padding:8px 10px;background:var(--sunk)}
+
+/* value chain */
+.vc{display:grid;gap:4px}
+.vc .sup{background:var(--sunk);border-radius:6px;padding:6px 10px;font-size:12.5px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.vc .sup b{color:var(--ink)}
+.vc .pri{display:flex;gap:3px;margin-top:4px}
+.vc .pri div{flex:1;min-width:0;background:var(--accent);color:var(--bg);font-size:12px;font-weight:600;padding:10px 4px 10px 14px;
+  clip-path:polygon(0 0,88% 0,100% 50%,88% 100%,0 100%,10% 50%);text-align:center;line-height:1.25}
+.vc .pri div:first-child{clip-path:polygon(0 0,88% 0,100% 50%,88% 100%,0 100%)}
+.vc .pri small{display:block;font-weight:400;font-size:11px;opacity:.9}
+
+/* stacks */
+.stack{display:grid;gap:4px}
+.stack div{border-radius:8px;padding:8px 12px;font-size:13px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+
+/* tables */
+table.tb{border-collapse:collapse;width:100%;font-size:13px}
+.tb th,.tb td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+.tb th{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.pk{background:var(--amber-soft);color:var(--amber);font-weight:700;border-radius:4px;padding:0 4px}
+.fk{background:var(--violet-soft);color:var(--violet);font-weight:700;border-radius:4px;padding:0 4px}
+
+/* blockchain */
+.chain{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.blk{flex:1 1 120px;border:2px solid var(--accent);border-radius:10px;padding:8px;font-size:12px;display:grid;gap:2px;min-width:0}
+.blk b{font-family:var(--display);color:var(--ink)}
+
+/* checks */
+details.qc{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+details.qc summary{cursor:pointer;font-weight:600;font-size:14px}
+details.qc p{margin-top:6px;font-size:14px;color:var(--fg)}
+details.qc p b{color:var(--green)}
+
+/* quiz */
+.quiz{display:grid;gap:12px}
+.qq{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:grid;gap:8px}
+.qq .opts{display:grid;gap:6px}
+.qq button.o{text-align:left;font-weight:500;padding:8px 10px}
+.qq button.o.right{background:var(--green-soft);border-color:var(--green);color:var(--green);font-weight:650}
+.qq button.o.wrong{background:var(--red-soft);border-color:var(--red);color:var(--red)}
+.qq .why{font-size:13px;color:var(--muted)}
+.score{position:sticky;bottom:12px;justify-self:start;background:var(--ink);color:var(--bg);border-radius:999px;padding:6px 14px;font-weight:700;font-size:14px}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+html{scroll-behavior:smooth}
+</style>
+
+<div class="dock"><div class="in">
+  <div class="timer" id="timer" aria-live="off">60:00</div>
+  <button type="button" id="tStart">Start</button>
+  <button type="button" id="tReset">Reset</button>
+  <nav class="jumps" aria-label="Chapters">
+    <a href="#ch1" data-k="ch1">Ch 1</a><a href="#ch2" data-k="ch2">Ch 2</a><a href="#ch3" data-k="ch3">Ch 3</a>
+    <a href="#ch5" data-k="ch5">Ch 5</a><a href="#ch6" data-k="ch6">Ch 6</a><a href="#ch7" data-k="ch7">Ch 7</a><a href="#drill" data-k="drill">Quiz</a>
+  </nav>
+</div></div>
+
+<div class="wrap">
+<header class="top">
+  <div class="lab">BBA 3125 · Management Information Systems · Section G · Golam Morshed</div>
+  <h1>MIS Midterm Cram</h1>
+  <div class="examline">
+    <span class="chip hot">Tue 10 Nov · 9:00 to 11:00 AM · Slot 1</span>
+    <span class="chip">50 marks · converts to 40% of the grade</span>
+    <span class="chip">Textbook: Laudon, MIS 18th ed.</span>
+  </div>
+  <div class="marks">
+    <div class="lab">Where the 50 marks come from (course outline, Bloom split)</div>
+    <div class="bar" role="img" aria-label="Remember 5, Understand 15, Apply 15, Analyze 10, Evaluate 5 marks">
+      <span style="flex:5;background:#7A8AA3">5</span>
+      <span style="flex:15;background:#2F6FB0">Understand 15</span>
+      <span style="flex:15;background:#0E8F9C">Apply 15</span>
+      <span style="flex:10;background:#5B4BC9">Analyze 10</span>
+      <span style="flex:5;background:#C77A12">5</span>
+    </div>
+    <div class="legend"><span>Grey: Remember 5</span><span>Blue: Understand 15</span><span>Teal: Apply 15</span><span>Violet: Analyze 10</span><span>Amber: Evaluate 5</span></div>
+    <p class="note">Only 5 marks are pure memory. 30 marks ask you to <b>apply, analyze or evaluate</b>: put a company into a model (five forces, value chain, system type) and justify it. Practise saying "X is strong because…".</p>
+  </div>
+
+  <div class="plan">
+    <a href="#ch1"><span class="min">7 min</span><span class="t">Ch 1 · IS today</span><span class="s">IPO, 3 dimensions, 6 objectives</span></a>
+    <a href="#ch2"><span class="min">9 min</span><span class="t">Ch 2 · E-business</span><span class="s">TPS/MIS/DSS/ESS, ERP·SCM·CRM·KMS</span></a>
+    <a href="#ch3"><span class="min">13 min</span><span class="t">Ch 3 · Strategy</span><span class="s">5 forces, 4 strategies, value chain</span></a>
+    <a href="#ch5"><span class="min">7 min</span><span class="t">Ch 5 · Infrastructure</span><span class="s">eras, components, cloud</span></a>
+    <a href="#ch6"><span class="min">8 min</span><span class="t">Ch 6 · Databases</span><span class="s">DBMS, keys, BI, blockchain</span></a>
+    <a href="#ch7"><span class="min">7 min</span><span class="t">Ch 7 · Networks</span><span class="s">TCP/IP, DNS, wireless</span></a>
+    <a href="#drill"><span class="min">9 min</span><span class="t">Final quiz</span><span class="s">20 questions, auto-marked</span></a>
+  </div>
+
+  <div class="top10">
+    <h3>If you only have 10 minutes, know these</h3>
+    <ol>
+      <li><b>Information system</b> = collects, processes, stores and distributes information for decisions and control. Input → Processing → Output, plus feedback.</li>
+      <li>Three dimensions: <b>Organization, Management, Technology</b>.</li>
+      <li>Six objectives: operational excellence · new products/services/models · customer &amp; supplier intimacy · improved decisions · competitive advantage · survival.</li>
+      <li>By level: <b>TPS</b> (operations) → <b>MIS / DSS</b> (middle) → <b>ESS</b> (senior). TPS feeds the others.</li>
+      <li>Enterprise apps: <b>ERP</b> (inside the firm), <b>SCM</b> (suppliers), <b>CRM</b> (customers), <b>KMS</b> (knowledge).</li>
+      <li>Five forces: rivals, new entrants, substitutes, customers, suppliers. Rate each and give a reason.</li>
+      <li>Four strategies: <b>low-cost</b> (Walmart) · <b>differentiation</b> (Apple) · <b>niche</b> (Hilton) · <b>customer/supplier intimacy</b> (Amazon).</li>
+      <li>Value chain: 5 primary (inbound, operations, outbound, sales &amp; marketing, service) + 4 support (infrastructure, HR, technology, procurement).</li>
+      <li>Cloud: <b>IaaS · PaaS · SaaS</b>; public · private · hybrid. Moore's law, Metcalfe's law.</li>
+      <li>Database: table, row, column, <b>primary key</b>, <b>foreign key</b>; DBMS fixes redundancy. Network: <b>packet switching, TCP/IP, DNS</b>.</li>
+    </ol>
+  </div>
+</header>
+
+<!-- ===================== CH 1 ===================== -->
+<section class="ch" id="ch1">
+  <div class="chhead"><div><div class="n">CHAPTER 1 · 7 MIN</div><h2>Information Systems in Global Business Today</h2></div>
+    <label><input type="checkbox" data-done="ch1"> Done</label></div>
+  <div class="grid">
+    <div class="card"><h3>What an information system does</h3>
+      <div class="flow">
+        <div class="b"><span class="lab">Environment</span>customers · suppliers · regulators · stockholders · competitors</div>
+        <span class="ar">→</span>
+        <div class="b"><b>Input</b>captures raw data</div><span class="ar">→</span>
+        <div class="b"><b>Processing</b>turns data into meaningful form</div><span class="ar">→</span>
+        <div class="b"><b>Output</b>sends information to people who use it</div>
+      </div>
+      <div class="loop">↺ Feedback: output returned to the right people to correct the input stage</div>
+      <p class="note">UPS example: label scan (input) → central computer updates location (processing) → tracking page and proof of delivery (output).</p>
+    </div>
+    <div class="grid g2">
+      <div class="card"><h3>Data → Information → Knowledge</h3>
+        <div class="stack">
+          <div class="t-red"><b>Data</b><span>raw facts: "item 3456 sold, Tk 120"</span></div>
+          <div class="t-amb"><b>Information</b><span>meaningful: "rice sales up 20% this week"</span></div>
+          <div class="t-grn"><b>Knowledge</b><span>how to act: "stock more rice before Eid"</span></div>
+        </div>
+        <p class="note"><b>IT</b> = hardware and software. <b>IS</b> = IT plus the people, organization and management that use it. IS is the bigger idea.</p>
+      </div>
+      <div class="card"><h3>Three dimensions of an IS</h3>
+        <div class="tiles">
+          <div class="tile t-acc"><b>Organization</b>people, structure, business processes, culture, politics</div>
+          <div class="tile t-vio"><b>Management</b>sets strategy, makes decisions, solves problems, leads</div>
+          <div class="tile t-amb"><b>Technology</b>hardware, software, data management, networking = IT infrastructure</div>
+        </div>
+      </div>
+    </div>
+    <div class="card"><h3>Six strategic business objectives <span class="note">(with the UPS case)</span></h3>
+      <div class="tiles">
+        <div class="tile"><b>1 · Operational excellence</b>efficiency, lower cost. ORION routes saved ~100M miles.</div>
+        <div class="tile"><b>2 · New products, services, business models</b>online labels, live tracking, DeliveryDefense.</div>
+        <div class="tile"><b>3 · Customer &amp; supplier intimacy</b>customers track and reroute parcels.</div>
+        <div class="tile"><b>4 · Improved decision making</b>real data instead of guesses. NPT reroutes around storms.</div>
+        <div class="tile"><b>5 · Competitive advantage</b>better service at lower cost than FedEx.</div>
+        <div class="tile"><b>6 · Survival</b>IS is a necessity (industry change, laws). Citibank ATMs.</div>
+      </div>
+    </div>
+    <div class="grid g2">
+      <div class="card"><h3>Complementary assets</h3>
+        <p class="note">IT alone does not create value. Firms also need:</p>
+        <ul class="t"><li><b>Organizational</b>: supportive culture, efficient processes, teamwork</li><li><b>Managerial</b>: strong senior support, incentives, training</li><li><b>Social</b>: internet and telecom infrastructure, standards, laws</li></ul>
+      </div>
+      <div class="card"><h3>Digital firm + today's big four (1.7)</h3>
+        <ul class="t"><li><b>Digital firm</b>: core business relationships and processes are digital. <b>Time shifting</b> (24/7) and <b>space shifting</b> (work anywhere).</li>
+        <li><b>IoT</b>: everyday objects with sensors that share data</li><li><b>Big data</b>: the 3 Vs (volume, variety, velocity)</li><li><b>Cloud computing</b>: computing over the internet</li><li><b>AI</b>: systems that learn and decide like people</li></ul>
+      </div>
+    </div>
+    <details class="qc"><summary>Quick check: "Information technology and information systems are the same thing." True or false?</summary><p><b>False.</b> IT is the hardware and software. An IS also includes the organization and management dimensions.</p></details>
+  </div>
+</section>
+
+<!-- ===================== CH 2 ===================== -->
+<section class="ch" id="ch2">
+  <div class="chhead"><div><div class="n">CHAPTER 2 · 9 MIN</div><h2>Global E-business and Collaboration</h2></div>
+    <label><input type="checkbox" data-done="ch2"> Done</label></div>
+  <div class="grid">
+    <div class="grid g2">
+      <div class="card"><h3>Systems by management level</h3>
+        <div class="pyr">
+          <div class="l1">ESS<span>senior · strategic, non-routine</span></div>
+          <div class="l2">MIS · DSS · BI<span>middle · reports and what-if</span></div>
+          <div class="l3">TPS<span>operational · daily routine transactions</span></div>
+        </div>
+        <p class="note">TPS is the main <b>source of data</b>. ESS mainly <b>receives</b> data from lower systems.</p>
+      </div>
+      <div class="card scroll"><h3>Tell them apart</h3>
+        <table class="tb"><tr><th>System</th><th>Decision type</th><th>Example</th></tr>
+          <tr><td><b>TPS</b></td><td>routine, records transactions</td><td>supermarket checkout, payroll</td></tr>
+          <tr><td><b>MIS</b></td><td>routine reports from TPS data</td><td>monthly sales summary report</td></tr>
+          <tr><td><b>DSS</b></td><td>non-routine, what-if models</td><td>voyage-estimating DSS (ship costs)</td></tr>
+          <tr><td><b>BI</b></td><td>tools and data to analyse</td><td>dashboards, data mining</td></tr>
+          <tr><td><b>ESS</b></td><td>non-routine, judgment, external data</td><td>CEO digital dashboard</td></tr></table>
+      </div>
+    </div>
+    <div class="card"><h3>Business process: order fulfillment crosses departments</h3>
+      <div class="flow">
+        <div class="b"><b>Sales</b>generate order, submit order</div><span class="ar">→</span>
+        <div class="b"><b>Accounting</b>check credit, approve, invoice</div><span class="ar">→</span>
+        <div class="b"><b>Manufacturing</b>assemble product, ship</div><span class="ar">→</span>
+        <div class="b"><b>Customer</b>receives product and bill</div>
+      </div>
+      <p class="note">IT improves processes in two ways: makes the existing process <b>more efficient</b>, or <b>changes the process</b> itself (new flow of information).</p>
+    </div>
+    <div class="card"><h3>Enterprise applications: four systems that link the firm</h3>
+      <div class="tiles">
+        <div class="tile t-acc"><b>ERP / enterprise system</b>one central database for finance, HR, manufacturing, sales. Kills data silos.</div>
+        <div class="tile t-amb"><b>SCM</b>links suppliers, factories, distributors. Right product, right place, less inventory.</div>
+        <div class="tile t-vio"><b>CRM</b>everything about the customer: sales, marketing, service. Retain and grow customers.</div>
+        <div class="tile t-grn"><b>KMS</b>capture and share knowledge and expertise across the firm.</div>
+      </div>
+      <p class="note"><b>Intranet</b> = internal network for employees. <b>Extranet</b> = intranet opened to suppliers or customers. <b>E-business</b> (all processes digital) ⊃ <b>e-commerce</b> (buying and selling) · <b>e-government</b> (government services online).</p>
+    </div>
+    <div class="grid g2">
+      <div class="card"><h3>Collaboration: time/space matrix</h3>
+        <div class="mx">
+          <span></span><span class="h">Same time</span><span class="h">Different time</span>
+          <span class="v">Same place</span><div class="q t-acc">interactive whiteboards, decision rooms, shared table displays</div><div class="q t-amb">team rooms, shared displays, project management systems</div>
+          <span class="v">Different place</span><div class="q t-vio">Zoom/Teams video meetings, IM, telepresence</div><div class="q t-grn">email, wikis, blogs, Google Drive, enterprise social networks</div>
+        </div>
+        <p class="note">6-step tool choice starts with: where is the firm in this matrix?</p>
+      </div>
+      <div class="card"><h3>Collaboration and social business words</h3>
+        <ul class="t">
+          <li><b>Collaboration</b>: working with others toward shared, explicit goals</li>
+          <li><b>Social business</b>: using social platforms to engage employees, customers, suppliers</li>
+          <li><b>Telepresence</b>: appear present at a place you are not</li>
+          <li><b>Enterprise social networking</b>: Salesforce Chatter, Microsoft Viva Engage</li>
+          <li><b>Human-AI collaboration</b>: AI helps with diagnosis, drug discovery, drafting</li>
+          <li><b>Metaverse / virtual worlds</b>: 3D spaces with avatars</li>
+        </ul>
+      </div>
+    </div>
+    <div class="grid g2">
+      <div class="card"><h3>Knowledge</h3>
+        <div class="tiles"><div class="tile t-amb"><b>Tacit</b>in people's heads, not written down</div><div class="tile t-acc"><b>Explicit</b>documented: reports, manuals</div></div>
+        <ul class="t"><li>KMS types: <b>enterprise-wide</b> (content management, expertise location, learning management), <b>knowledge work systems</b> (CAD, VR for engineers), <b>intelligent techniques</b> (AI)</li></ul>
+      </div>
+      <div class="card"><h3>Information management (outline, week 2)</h3>
+        <div class="flow"><div class="b">Create</div><span class="ar">→</span><div class="b">Store</div><span class="ar">→</span><div class="b">Use &amp; share</div><span class="ar">→</span><div class="b">Archive</div><span class="ar">→</span><div class="b">Destroy</div></div>
+        <ul class="t"><li><b>Data silos</b>: each department keeps its own data, so it doesn't match or isn't shared</li><li><b>Dirty data</b>: wrong, duplicate or incomplete data → bad decisions and cost</li></ul>
+      </div>
+    </div>
+    <div class="card"><h3>Who runs IS</h3>
+      <div class="tiles">
+        <div class="tile"><b>CIO</b>senior manager for IT and IS</div><div class="tile"><b>CSO</b>security</div><div class="tile"><b>CPO</b>privacy and data law</div>
+        <div class="tile"><b>CKO</b>knowledge management</div><div class="tile"><b>CDO</b>data across the firm</div><div class="tile"><b>Systems analyst</b>translates business problems into system requirements</div>
+        <div class="tile"><b>Programmer</b>writes the software</div><div class="tile"><b>End users</b>departments the systems are built for</div>
+      </div>
+    </div>
+    <details class="qc"><summary>Quick check: A manager runs "what if fuel rises 10%?" on shipping costs. Which system?</summary><p><b>DSS.</b> Non-routine, what-if analysis for middle management. (An MIS would just print the routine monthly cost report.)</p></details>
+    <details class="qc"><summary>Case 2 in one line: how do virtual meetings help and hurt?</summary><p><b>Help:</b> remote/hybrid work, meet from anywhere. <b>Hurt:</b> too many meetings, Zoom fatigue, isolation, surveillance, self-censorship. <b>Fix:</b> fewer, shorter meetings and meeting-free days (3 days: +55% cooperation, −57% stress).</p></details>
+  </div>
+</section>
+
+<!-- ===================== CH 3 ===================== -->
+<section class="ch" id="ch3">
+  <div class="chhead"><div><div class="n">CHAPTER 3 · 13 MIN · MOST MARKS</div><h2>Information Systems, Organizations and Strategy</h2></div>
+    <label><input type="checkbox" data-done="ch3"> Done</label></div>
+  <div class="grid">
+    <div class="card"><h3>Porter's competitive forces model</h3>
+      <div class="ff">
+        <div class="f n1"><b>Threat of new entrants</b>barriers: cost of entry, know-how, economies of scale, brand, technology</div>
+        <div class="f w"><b>Supplier power</b>few suppliers, unique input, high switching cost → strong</div>
+        <div class="f c"><b>Rivalry among existing competitors</b>many rivals, same product, low switching cost, low loyalty, high exit cost → strong</div>
+        <div class="f e"><b>Customer (buyer) power</b>easy to switch, price-sensitive, big buyers, price comparison online → strong</div>
+        <div class="f s"><b>Threat of substitutes</b>cheaper or better alternatives that do the same job</div>
+      </div>
+      <div class="trap"><b>How to answer:</b> name the force → say <b>strong / medium / low</b> → give one fact as the reason. Example: "Buyer power is strong because airline fares are compared online and switching costs nothing."</div>
+    </div>
+    <div class="card"><h3>Four strategies to deal with the forces</h3>
+      <div class="tiles">
+        <div class="tile t-acc"><b>Low-cost leadership</b>lowest operating cost and price. <i>Walmart</i> continuous replenishment: sales data goes straight to suppliers.</div>
+        <div class="tile t-vio"><b>Product differentiation</b>new, unique products or services. <i>Apple</i> iPhone/iPad, <i>Nike</i> custom shoes.</div>
+        <div class="tile t-amb"><b>Focus on market niche</b>serve one narrow segment better than anyone. <i>Hilton</i> OnQ guest data.</div>
+        <div class="tile t-grn"><b>Customer &amp; supplier intimacy</b>strong ties, high switching costs. <i>Amazon</i> recommendations, <i>Toyota</i> with suppliers.</div>
+      </div>
+    </div>
+    <div class="card scroll"><h3>How the internet changed each force</h3>
+      <table class="tb"><tr><th>Force</th><th>Internet impact</th></tr>
+        <tr><td>Substitutes</td><td>enables new substitutes (streaming replaces DVDs)</td></tr>
+        <tr><td>Customers</td><td>price and product info everywhere → <b>customer power up</b></td></tr>
+        <tr><td>Suppliers</td><td>online procurement → firm gains power over suppliers, but suppliers gain from lower entry barriers too</td></tr>
+        <tr><td>New entrants</td><td><b>lower barriers</b> (no sales force, no shops needed)</td></tr>
+        <tr><td>Rivalry</td><td>wider market, more rivals, smaller differences → <b>rivalry up</b></td></tr></table>
+    </div>
+    <div class="card"><h3>Value chain model: where IS adds value</h3>
+      <div class="vc">
+        <div class="sup"><b>Administration &amp; management</b><span>scheduling, electronic messaging</span></div>
+        <div class="sup"><b>Human resources</b><span>workforce planning systems</span></div>
+        <div class="sup"><b>Technology</b><span>CAD design systems</span></div>
+        <div class="sup"><b>Procurement</b><span>computerized ordering</span></div>
+        <div class="pri">
+          <div>Inbound logistics<small>automated warehouse</small></div>
+          <div>Operations<small>computer-controlled machines</small></div>
+          <div>Outbound logistics<small>automated shipment</small></div>
+          <div>Sales &amp; marketing<small>online ordering</small></div>
+          <div>Service<small>equipment maintenance</small></div>
+        </div>
+      </div>
+      <p class="note">Top 4 grey rows = <b>support</b> activities. Arrows = <b>primary</b> activities (directly make and deliver). <b>Benchmarking</b> compares you with standards; <b>best practices</b> = the most successful way. <b>Value web</b> = linked value chains of partner firms.</p>
+    </div>
+    <div class="grid g2">
+      <div class="card"><h3>Two views of an organization</h3>
+        <div class="tiles"><div class="tile t-acc"><b>Technical (microeconomic)</b>inputs (capital, labor) → production → outputs</div><div class="tile t-vio"><b>Behavioral</b>rights, privileges, routines, politics, culture</div></div>
+        <ul class="t"><li><b>Routines</b>: standard procedures; a business process is a set of routines</li><li>Mintzberg structures: entrepreneurial · machine bureaucracy · divisionalized bureaucracy · professional bureaucracy · adhocracy</li></ul>
+      </div>
+      <div class="card"><h3>Economic impacts of IT</h3>
+        <ul class="t">
+          <li><b>Transaction cost theory</b>: IT cuts the cost of dealing with outside firms → firms <b>shrink</b> / outsource</li>
+          <li><b>Agency theory</b>: IT cuts the cost of supervising agents → firm can <b>grow</b> without more managers</li>
+          <li>IT <b>flattens</b> organizations: fewer middle-manager layers</li>
+          <li><b>Resistance to change</b> (Leavitt's diamond): technology, tasks, people, structure all affect each other</li>
+          <li><b>Disruptive technology</b>: replaces a product and creates winners and losers (PCs, digital photography, streaming music)</li>
+        </ul>
+      </div>
+    </div>
+    <div class="grid g2">
+      <div class="card"><h3>Network-based strategies</h3>
+        <ul class="t"><li><b>Synergies</b>: output of one unit is input for another</li><li><b>Core competency</b>: what the firm does best (world-class)</li><li><b>Network economics</b>: value grows as more people join</li><li><b>Virtual company</b>: links partners without owning them</li><li><b>Business ecosystem</b>: <b>keystone</b> firm (platform owner like Apple) + <b>niche</b> firms (app makers)</li></ul>
+      </div>
+      <div class="card"><h3>Challenges with strategic systems</h3>
+        <ul class="t"><li>Advantage <b>doesn't last</b>: rivals copy</li><li><b>Align IT with business objectives</b></li><li><b>Managing strategic transitions</b>: changing the whole organization is hard</li></ul>
+        <p class="note"><b>AI in Ch 3</b>: AI adds value at every value-chain step and can change each force (e.g. AI chatbots as new substitutes, AI pricing raises rivalry).</p>
+      </div>
+    </div>
+    <details class="qc"><summary>Apply it: airline industry, rate the five forces</summary><p><b>Rivalry strong</b> (same routes, same prices) · <b>new entrants low to medium</b> (huge cost, regulation) · <b>suppliers strong</b> (only Boeing and Airbus, fuel, unions) · <b>buyers strong</b> (compare fares online) · <b>substitutes medium</b> (bus/train for short trips only).</p></details>
+    <details class="qc"><summary>Apply it: which strategy is "Amazon remembers what you bought and recommends more"?</summary><p><b>Customer intimacy.</b> It builds a relationship and raises switching costs.</p></details>
+  </div>
+</section>
+
+<!-- ===================== CH 5 ===================== -->
+<section class="ch" id="ch5">
+  <div class="chhead"><div><div class="n">CHAPTER 5 · 7 MIN</div><h2>IT Infrastructure and Emerging Technologies</h2><p class="src">From the textbook (no class slides yet): check with your notes.</p></div>
+    <label><input type="checkbox" data-done="ch5"> Done</label></div>
+  <div class="grid">
+    <div class="card"><h3>IT infrastructure = shared technology resources + services</h3>
+      <div class="flow">
+        <div class="b"><b>Mainframe</b>1959 →</div><span class="ar">→</span>
+        <div class="b"><b>Personal computer</b>1981 →</div><span class="ar">→</span>
+        <div class="b"><b>Client/server</b>1983 →</div><span class="ar">→</span>
+        <div class="b"><b>Enterprise computing</b>1992 →</div><span class="ar">→</span>
+        <div class="b"><b>Cloud &amp; mobile</b>2000 →</div>
+      </div>
+      <p class="note">Five eras. Each era still exists today; the newest is cloud and mobile.</p>
+    </div>
+    <div class="grid g2">
+      <div class="card"><h3>Drivers of infrastructure change</h3>
+        <ul class="t"><li><b>Moore's law</b>: chip power doubles about every 2 years, cost falls</li><li><b>Law of mass digital storage</b>: storage gets cheaper fast</li><li><b>Metcalfe's law</b>: a network's value grows sharply with more members</li><li><b>Falling communication costs</b> and the internet</li><li><b>Standards</b> and network effects</li></ul>
+      </div>
+      <div class="card"><h3>7 infrastructure components</h3>
+        <div class="tiles">
+          <div class="tile">Hardware platforms</div><div class="tile">Operating systems</div><div class="tile">Enterprise software apps</div><div class="tile">Data management &amp; storage</div>
+          <div class="tile">Networking / telecom</div><div class="tile">Internet platforms</div><div class="tile">Consulting &amp; integration</div>
+        </div>
+      </div>
+    </div>
+    <div class="grid g2">
+      <div class="card"><h3>Cloud computing</h3>
+        <div class="stack">
+          <div class="t-vio"><b>SaaS</b><span>use the finished app: Gmail, Microsoft 365, Salesforce</span></div>
+          <div class="t-acc"><b>PaaS</b><span>build your own apps on their platform: Azure, Google App Engine</span></div>
+          <div class="t-amb"><b>IaaS</b><span>rent servers and storage: Amazon AWS</span></div>
+        </div>
+        <p class="note"><b>Public</b> (shared, e.g. AWS) · <b>private</b> (one firm only) · <b>hybrid</b> (both). Pay as you go, scales up and down.</p>
+      </div>
+      <div class="card"><h3>Trends to name</h3>
+        <ul class="t"><li><b>Mobile digital platform</b>; <b>BYOD</b> / consumerization of IT</li><li><b>Virtualization</b>: many virtual machines on one physical machine</li><li><b>Edge computing</b>: process data near where it is created</li><li><b>Quantum computing</b>; <b>green computing</b>; multicore processors</li><li>Software: <b>open source</b> (Linux), <b>web services / SOA</b>, cloud apps, outsourcing</li></ul>
+      </div>
+    </div>
+    <div class="trap"><b>Managing infrastructure:</b> judge cost with <b>TCO (total cost of ownership)</b>: hardware + software + installation + training + support + maintenance + downtime + space and energy. Plan for <b>scalability</b> (grows without breaking).</div>
+    <details class="qc"><summary>Quick check: a firm rents Microsoft 365 per user per month. Which cloud model?</summary><p><b>SaaS</b>, software as a service: the whole app is delivered over the internet.</p></details>
+  </div>
+</section>
+
+<!-- ===================== CH 6 ===================== -->
+<section class="ch" id="ch6">
+  <div class="chhead"><div><div class="n">CHAPTER 6 · 8 MIN</div><h2>Databases, Information Management and Blockchain</h2><p class="src">From the textbook (no class slides yet): check with your notes.</p></div>
+    <label><input type="checkbox" data-done="ch6"> Done</label></div>
+  <div class="grid">
+    <div class="grid g2">
+      <div class="card"><h3>Problems with the old file approach</h3>
+        <ul class="t"><li><b>Data redundancy</b> (same data in many files) and <b>inconsistency</b></li><li><b>Program-data dependence</b>: change data, break programs</li><li><b>Lack of flexibility</b> for new reports</li><li><b>Poor security</b></li><li><b>No data sharing</b></li></ul>
+        <p class="note">Fix: a <b>DBMS</b> (database management system) holds data centrally for many programs. It separates the <b>logical view</b> (what users see) from the <b>physical view</b> (how it's stored).</p>
+      </div>
+      <div class="card"><h3>Relational database in one picture</h3>
+        <div class="scroll"><table class="tb">
+          <tr><th><span class="pk">Supplier_No</span></th><th>Supplier_Name</th><th>City</th></tr>
+          <tr><td>8259</td><td>CBM Inc.</td><td>Dayton</td></tr>
+          <tr><td>8261</td><td>B. R. Molds</td><td>Cleveland</td></tr></table></div>
+        <div class="scroll"><table class="tb">
+          <tr><th><span class="pk">Part_No</span></th><th>Part_Name</th><th><span class="fk">Supplier_No</span></th></tr>
+          <tr><td>137</td><td>Door latch</td><td>8259</td></tr>
+          <tr><td>145</td><td>Side mirror</td><td>8261</td></tr></table></div>
+        <p class="note">Table = relation · row = record (tuple) · column = field (attribute). <span class="pk">Primary key</span> identifies each row. <span class="fk">Foreign key</span> links to another table's primary key.</p>
+      </div>
+    </div>
+    <div class="grid g3">
+      <div class="card"><h3>3 operations</h3><ul class="t"><li><b>Select</b>: pick rows</li><li><b>Project</b>: pick columns</li><li><b>Join</b>: combine tables</li></ul></div>
+      <div class="card"><h3>DBMS capabilities</h3><ul class="t"><li><b>Data definition</b></li><li><b>Data dictionary</b>: describes each field</li><li><b>Query language</b>: SQL</li></ul></div>
+      <div class="card"><h3>Good design</h3><ul class="t"><li><b>Normalization</b>: remove redundancy</li><li><b>ER diagram</b>: entities and relationships</li><li><b>Referential integrity</b>: no orphan foreign keys</li><li><b>NoSQL</b> for unstructured data</li></ul></div>
+    </div>
+    <div class="card"><h3>Business intelligence: from big data to decisions</h3>
+      <div class="flow">
+        <div class="b"><b>Big data</b>volume · variety · velocity</div><span class="ar">→</span>
+        <div class="b"><b>Store</b>data warehouse, data mart, data lake, Hadoop, in-memory</div><span class="ar">→</span>
+        <div class="b"><b>Analyse</b>OLAP (many dimensions), data mining, text and web mining</div><span class="ar">→</span>
+        <div class="b"><b>Decide</b>reports, dashboards, predictions</div>
+      </div>
+      <p class="note">Data mining finds: <b>associations</b> (bought together) · <b>sequences</b> (in order over time) · <b>classification</b> · <b>clustering</b> · <b>forecasting</b>. A <b>data mart</b> is a small warehouse for one department. A <b>data lake</b> stores raw data of any kind.</p>
+    </div>
+    <div class="card"><h3>Blockchain</h3>
+      <div class="chain">
+        <div class="blk"><b>Block 1</b>transactions<br>hash #A1</div><span class="ar" style="color:var(--accent);font-weight:700">→</span>
+        <div class="blk"><b>Block 2</b>transactions<br>prev #A1 · hash #B7</div><span class="ar" style="color:var(--accent);font-weight:700">→</span>
+        <div class="blk"><b>Block 3</b>transactions<br>prev #B7 · hash #C2</div>
+      </div>
+      <ul class="t"><li><b>Distributed ledger</b>: every participant has a copy; no central owner</li><li>Each block holds the previous block's hash, so changing one breaks the chain → <b>tamper-resistant</b></li><li>New blocks are approved by the network (consensus). Uses: supply-chain tracking, payments, smart contracts</li></ul>
+    </div>
+    <div class="trap"><b>Data quality words:</b> <b>information policy</b> (rules for data) · <b>data administration</b> (policy and planning) · <b>database administration</b> (technical design and upkeep) · <b>data governance</b> · <b>data quality audit</b> · <b>data cleansing / scrubbing</b> (fix dirty data).</div>
+    <details class="qc"><summary>Quick check: in Part table, what is Supplier_No?</summary><p>A <b>foreign key</b>: it links each part to its supplier's primary key in the Supplier table.</p></details>
+  </div>
+</section>
+
+<!-- ===================== CH 7 ===================== -->
+<section class="ch" id="ch7">
+  <div class="chhead"><div><div class="n">CHAPTER 7 · 7 MIN</div><h2>Telecommunications, the Internet and Wireless</h2><p class="src">From the textbook (no class slides yet): check with your notes.</p></div>
+    <label><input type="checkbox" data-done="ch7"> Done</label></div>
+  <div class="grid">
+    <div class="card"><h3>A simple network</h3>
+      <div class="flow">
+        <div class="b"><b>Computers</b>each with a NIC (network interface card)</div><span class="ar">→</span>
+        <div class="b"><b>Switch</b>connects devices in the LAN</div><span class="ar">→</span>
+        <div class="b"><b>Router</b>sends packets between networks</div><span class="ar">→</span>
+        <div class="b"><b>Internet</b>other networks</div>
+      </div>
+      <p class="note">A <b>network operating system (NOS)</b> runs the network from a server. <b>SDN</b> (software-defined networking) controls the network with software instead of hardware.</p>
+    </div>
+    <div class="grid g2">
+      <div class="card"><h3>3 key technologies</h3>
+        <ul class="t"><li><b>Client/server</b>: clients ask, servers provide</li><li><b>Packet switching</b>: message cut into packets, sent by different routes, reassembled</li><li><b>TCP/IP</b>: the internet's protocols</li></ul>
+        <div class="stack">
+          <div class="t-vio"><b>Application</b><span>HTTP, email</span></div>
+          <div class="t-acc"><b>Transport</b><span>TCP: reliable delivery</span></div>
+          <div class="t-amb"><b>Internet</b><span>IP: addresses and routing</span></div>
+          <div class="t-grn"><b>Network interface</b><span>physical sending</span></div>
+        </div>
+      </div>
+      <div class="card"><h3>Network size + media</h3>
+        <div class="stack">
+          <div class="t-grn"><b>LAN</b><span>one building, ~500 m</span></div>
+          <div class="t-amb"><b>CAN</b><span>campus</span></div>
+          <div class="t-acc"><b>MAN</b><span>a city</span></div>
+          <div class="t-vio"><b>WAN</b><span>country or world (the internet)</span></div>
+        </div>
+        <p class="note">Media: twisted pair · coaxial cable · <b>fiber optic</b> (fastest) · wireless. <b>Bandwidth</b> = capacity of a channel (bits per second).</p>
+      </div>
+    </div>
+    <div class="grid g2">
+      <div class="card"><h3>The internet</h3>
+        <ul class="t"><li><b>ISP</b>: company that sells internet access</li><li><b>IP address</b>: number for each device (IPv4 → IPv6 for more addresses)</li><li><b>DNS</b>: turns names into IP addresses. Root → <b>.bd</b>/.com → aiub.edu → www</li><li>Services: email, <b>VoIP</b> (voice over internet), <b>VPN</b> (private tunnel over public internet), web (<b>HTTP</b>, <b>URL</b>), search engines</li><li><b>Web 2.0</b>: social, user content · <b>Web 3.0</b>: semantic web · <b>IoT</b></li></ul>
+      </div>
+      <div class="card"><h3>Wireless</h3>
+        <div class="tiles">
+          <div class="tile t-acc"><b>Cellular</b>3G → 4G → <b>5G</b> (very fast, low delay)</div>
+          <div class="tile t-amb"><b>Wi-Fi</b>802.11, hotspots</div>
+          <div class="tile t-vio"><b>Bluetooth</b>802.15, short range PAN</div>
+          <div class="tile t-grn"><b>RFID</b>tags + readers track items (inventory, supply chain)</div>
+          <div class="tile"><b>WSN</b>wireless sensor networks</div>
+          <div class="tile"><b>NFC</b>tap to pay</div>
+        </div>
+      </div>
+    </div>
+    <details class="qc"><summary>Quick check: what turns www.aiub.edu into a number computers use?</summary><p><b>DNS</b> (Domain Name System) maps the domain name to the IP address.</p></details>
+  </div>
+</section>
+
+<!-- ===================== QUIZ ===================== -->
+<section class="ch" id="drill">
+  <div class="chhead"><div><div class="n">FINAL · 9 MIN</div><h2>Practice quiz</h2><p class="note">Tap an answer. Green = right. The reason shows underneath.</p></div>
+    <label><input type="checkbox" data-done="drill"> Done</label></div>
+  <div class="quiz" id="quiz"></div>
+  <div class="score" id="score">Score 0 / 0</div>
+</section>
+</div>
+
+<script>
+(function(){
+  // ---------- timer ----------
+  var total = 60*60, left = total, t = null, el = document.getElementById('timer'), sb = document.getElementById('tStart');
+  function show(){ var m=Math.floor(left/60), s=left%60; el.textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s; }
+  sb.addEventListener('click', function(){
+    if(t){ clearInterval(t); t=null; sb.textContent='Start'; return; }
+    sb.textContent='Pause';
+    t=setInterval(function(){ if(left>0){left--; show();} else { clearInterval(t); t=null; sb.textContent='Start'; el.textContent='Done'; } },1000);
+  });
+  document.getElementById('tReset').addEventListener('click', function(){ if(t){clearInterval(t);t=null;} sb.textContent='Start'; left=total; show(); });
+
+  // ---------- done checkboxes (per-viewer convenience only) ----------
+  var KEY='mis-cram-done', done={};
+  try{ done=JSON.parse(localStorage.getItem(KEY)||'{}')||{}; }catch(e){ done={}; }
+  function paint(){ document.querySelectorAll('.jumps a').forEach(function(a){ a.classList.toggle('done', !!done[a.dataset.k]); }); }
+  document.querySelectorAll('[data-done]').forEach(function(cb){
+    cb.checked=!!done[cb.dataset.done];
+    cb.addEventListener('change', function(){ done[cb.dataset.done]=cb.checked; try{localStorage.setItem(KEY, JSON.stringify(done));}catch(e){} paint(); });
+  });
+  paint();
+
+  // ---------- quiz ----------
+  var Q=[
+    ["Which of these is NOT one of the three dimensions of an information system?", ["Organization","Management","Technology","Marketing"],3,"The three dimensions are organization, management and technology."],
+    ["A supermarket checkout that records every sale is a…", ["DSS","TPS","ESS","KMS"],1,"Routine daily transactions are recorded by a transaction processing system."],
+    ["Which system mainly RECEIVES data from lower-level systems and serves senior managers?", ["TPS","MIS","ESS","SCM"],2,"ESS supports senior management and draws on TPS/MIS data plus outside data."],
+    ["A firm wants one central database for finance, HR and manufacturing. It needs…", ["ERP / enterprise system","CRM","Extranet","DSS"],0,"Enterprise systems (ERP) store data from all functions in one central repository."],
+    ["\"Knowledge that lives in employees' heads and isn't written down\" is…", ["Explicit knowledge","Tacit knowledge","Structured data","Metadata"],1,"Tacit knowledge is undocumented know-how."],
+    ["A Teams video call between Dhaka and Chattogram offices sits in which cell of the time/space matrix?", ["Same time, same place","Same time, different place","Different time, same place","Different time, different place"],1,"Live (same time) but remote (different place)."],
+    ["Walmart sends sales data straight to suppliers to restock with minimum inventory. This is…", ["Low-cost leadership","Market niche","Differentiation","Survival"],0,"Continuous replenishment keeps costs and prices low."],
+    ["Customers compare airline fares online and switch at no cost. Which force is strong?", ["Supplier power","Threat of new entrants","Customer (buyer) power","Substitutes"],2,"Easy comparison and zero switching cost give buyers power."],
+    ["In general, the internet makes the barriers to entry…", ["Higher","Lower","Unchanged","Illegal"],1,"No need for a sales force or physical shops, so new entrants come in more easily."],
+    ["Which is a SUPPORT activity in the value chain?", ["Inbound logistics","Operations","Procurement","Service"],2,"Support: administration, HR, technology, procurement. The others are primary."],
+    ["Transaction cost theory says IT helps firms…", ["Grow by hiring more managers","Shrink, because buying from outside gets cheaper","Avoid all competition","Raise prices"],1,"Lower market transaction costs mean firms can outsource and shrink."],
+    ["Apple as the owner of the App Store, with thousands of app makers around it, is a…", ["Keystone firm in a business ecosystem","Virtual company","Machine bureaucracy","Niche firm"],0,"The platform owner is the keystone; app developers are niche firms."],
+    ["\"Chip computing power doubles about every two years\" is…", ["Metcalfe's law","Moore's law","Law of mass digital storage","Porter's law"],1,"Moore's law."],
+    ["Renting servers and storage from Amazon AWS is…", ["SaaS","PaaS","IaaS","BYOD"],2,"Infrastructure as a service: raw computing and storage."],
+    ["The value of a network grows sharply as more people join. This is…", ["Moore's law","Metcalfe's law","Agency theory","TCO"],1,"Metcalfe's law (network effects)."],
+    ["A column in one table that links to the primary key of another table is a…", ["Primary key","Foreign key","Tuple","Data mart"],1,"Foreign key."],
+    ["Same customer data stored in many separate files, sometimes with different values, is…", ["Data redundancy and inconsistency","Normalization","Referential integrity","Data mining"],0,"The classic problem of the traditional file environment."],
+    ["Why is a blockchain hard to tamper with?", ["It is stored on one secure server","Each block holds the previous block's hash and copies are spread across the network","It uses SQL","It has no data"],1,"Change one block and every later hash breaks, and other copies disagree."],
+    ["Which turns a domain name like aiub.edu into an IP address?", ["TCP","DNS","VPN","RFID"],1,"Domain Name System."],
+    ["Breaking a message into packets that travel different routes and are reassembled is…", ["Circuit switching","Packet switching","Client/server","Bluetooth"],1,"Packet switching, the basis of the internet."]
+  ];
+  var box=document.getElementById('quiz'), sc=document.getElementById('score'), right=0, answered=0;
+  Q.forEach(function(q,i){
+    var d=document.createElement('div'); d.className='qq';
+    var h=document.createElement('div'); h.innerHTML='<b>'+(i+1)+'.</b> '; h.appendChild(document.createTextNode(q[0])); d.appendChild(h);
+    var o=document.createElement('div'); o.className='opts';
+    var why=document.createElement('div'); why.className='why'; why.hidden=true; why.textContent=q[3];
+    q[1].forEach(function(txt,j){
+      var b=document.createElement('button'); b.type='button'; b.className='o'; b.textContent=txt;
+      b.addEventListener('click', function(){
+        if(d.dataset.done) return; d.dataset.done='1'; answered++;
+        if(j===q[2]){ b.classList.add('right'); right++; } else { b.classList.add('wrong'); o.children[q[2]].classList.add('right'); }
+        why.hidden=false; sc.textContent='Score '+right+' / '+answered+(answered===Q.length?'  ·  '+Math.round(right*100/Q.length)+'%':'');
+      });
+      o.appendChild(b);
+    });
+    d.appendChild(o); d.appendChild(why); box.appendChild(d);
+  });
+  sc.textContent='Score 0 / 0  ·  '+Q.length+' questions';
+})();
+</script>
