@@ -27,3 +27,4 @@ The schedule, marks breakdown and textbook links are in **[COURSE.md](COURSE.md)
 | 3 | Ch 3: Information Systems, Organizations and Strategy | [`slides/Ch03-Information-Systems-Organizations-and-Strategy.pptx`](slides/Ch03-Information-Systems-Organizations-and-Strategy.pptx) |
 | 3 | Group discussion note: airline industry five forces | [`notes/Ch03-Group-Discussion-Airline-Five-Forces.docx`](notes/Ch03-Group-Discussion-Airline-Five-Forces.docx) |
 | 3 | Assignment 1 (group): Porter's five forces of SA Paribahan, due 6 Nov | [`assignments/assignment-01-porters-five-forces/`](assignments/assignment-01-porters-five-forces/) |
+| 7 | Midterm study pack: crash notes and visual sheets (Ch 1-3), full packs 1-2 | [`quizzes/midterm-study-pack/`](quizzes/midterm-study-pack/) |
